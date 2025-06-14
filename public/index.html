@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>React App</title>
+    <!-- Add Google Fonts link here as well, if not already present -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <!-- Monaco Editor Loader Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/loader.min.js"></script>
+
+    <!-- NEW SCRIPT BLOCK: Configure and Load Monaco Editor Core -->
+    <script>
+      // This function ensures window.require is ready before configuration and loading.
+      // It includes a retry mechanism for robustness.
+      function loadMonacoCore() {
+        if (window.require) {
+          window.require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs' } });
+          console.log("Monaco loader configured. Now loading editor.main...");
+          
+          // Load the main editor module
+          window.require(['vs/editor/editor.main'], function() {
+            // This callback runs when editor.main.js and its dependencies are loaded.
+            console.log("Monaco editor.main loaded successfully in index.html.");
+            window.monacoEditorCoreLoaded = true; // Set global flag
+          }, function(err) {
+            console.error("Monaco editor.main failed to load:", err);
+            // Optionally, you could set a global error flag here if you want to display a persistent message
+            // window.monacoEditorLoadError = true;
+          });
+        } else {
+          // If window.require is not yet available, retry after a short delay.
+          console.warn("window.require not yet available for Monaco. Retrying...");
+          setTimeout(loadMonacoCore, 50); // Retry quickly
+        }
+      }
+
+      // Start the loading process once the DOM is ready, but after loader.min.js
+      // Since this script is placed after loader.min.js, window.require should be available.
+      // However, the setTimeout adds an extra layer of safety.
+      document.addEventListener('DOMContentLoaded', loadMonacoCore);
+      // Or simply call it directly if loader.min.js guarantees it's available sync
+      // loadMonacoCore(); 
+    </script>
+  </body>
+</html>
